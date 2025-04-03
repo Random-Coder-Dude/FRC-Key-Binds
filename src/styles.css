@@ -1,0 +1,69 @@
+/* Ensure the top bar is a black bar at the top of the screen */
+#topBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 28px; /* Adjust height as needed */
+    background-color: black;
+    z-index: 1000; /* Ensures it stays on top of other elements */
+    display: flex;
+    align-items: center;
+    padding-left: 10px; /* Add some padding for the title */
+}
+
+/* Style for the title text in the top bar */
+#topBarTitle {
+    color: white;
+    font-size: 18px; /* Adjust font size as needed */
+    font-weight: bold;
+}
+
+#openProject {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    padding: 20px 40px; /* Increased padding for a larger button */
+    border: none; /* Remove default border */
+    border-radius: 10px; /* Slightly larger rounded corners */
+    font-size: 18px; /* Increased font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Slightly larger shadow */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
+}
+
+#openProject:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translate(-50%, -50%) scale(1.1); /* Slightly larger hover effect */
+}
+
+#openProject:active {
+    background-color: #003f7f; /* Even darker blue on click */
+    transform: translate(-50%, -50%) scale(0.95); /* Slightly shrink on click */
+}
+
+/* Background div that covers the entire screen */
+#background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://static.vecteezy.com/system/resources/thumbnails/011/865/592/small/simple-blue-background-flat-blue-gradation-wavy-background-vector.jpg') no-repeat center center fixed; /* Replace with your image path */
+    background-size: cover;
+    filter: blur(8px); /* Apply blur effect */
+    -webkit-filter: blur(8px); /* For Safari */
+    z-index: 0; /* Ensure it stays behind other elements */
+}
+
+/* Ensure the main content stays sharp and above the blurred background */
+#topBar, #openProject {
+    z-index: 10; /* Increase z-index to ensure they are above the background */
+}
