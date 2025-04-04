@@ -1,10 +1,16 @@
-/* Ensure the top bar is a black bar at the top of the screen */
+:root {
+    --primary: rgba(101, 199, 255, 0.8);
+    --primary-back: rgb(255, 255, 255);
+    --contrast: rgb(0, 0, 0);
+  }
+
+/* Ensure the top bar is styled */
 #topBar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 28px; /* Adjust height as needed */
+    height: 50px; /* Adjust height as needed */
     background-color: black;
     z-index: 1000; /* Ensures it stays on top of other elements */
     display: flex;
@@ -19,6 +25,7 @@
     font-weight: bold;
 }
 
+/* Style the Open Project button */
 #openProject {
     position: fixed;
     top: 50%;
@@ -27,8 +34,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #007bff; /* Blue background */
-    color: white; /* White text */
+    background-color: var(--primary); /* Use Pico's primary color */
+    color: var(--contrast); /* Use Pico's contrast color */
     padding: 20px 40px; /* Increased padding for a larger button */
     border: none; /* Remove default border */
     border-radius: 10px; /* Slightly larger rounded corners */
@@ -40,12 +47,12 @@
 }
 
 #openProject:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: var(--primary); /* Use Pico's hover color */
     transform: translate(-50%, -50%) scale(1.1); /* Slightly larger hover effect */
 }
 
 #openProject:active {
-    background-color: #003f7f; /* Even darker blue on click */
+    background-color: var(--contrast); /* Use Pico's active color */
     transform: translate(-50%, -50%) scale(0.95); /* Slightly shrink on click */
 }
 
@@ -56,8 +63,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('https://static.vecteezy.com/system/resources/thumbnails/011/865/592/small/simple-blue-background-flat-blue-gradation-wavy-background-vector.jpg') no-repeat center center fixed; /* Replace with your image path */
     background-size: cover;
+    background-color: var(--primary-back);
     filter: blur(8px); /* Apply blur effect */
     -webkit-filter: blur(8px); /* For Safari */
     z-index: 0; /* Ensure it stays behind other elements */
