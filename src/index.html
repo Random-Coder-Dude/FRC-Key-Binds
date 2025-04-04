@@ -8,10 +8,49 @@
     <title>FRC Key Binder</title>
 </head>
 <body>
-    <div id="background"></div> <!-- Background div -->
-    <div id="topBar">
-        <span id="topBarTitle">FRC Key Binder</span>
+    <!-- Sidebar -->
+    <div id="sidebar" style="display: none;">
+        <ul>
+            <li id="homeButton"><span class="icon">🏠</span><span class="text">Home</span></li>
+            <li id="settingsButton"><span class="icon">⚙️</span><span class="text">Settings</span></li>
+        </ul>
     </div>
-    <button id="openProject" onclick="openProject()">Open Project</button>
+
+    <!-- Top Bar -->
+    <header>
+        <div id="topBar">
+            <span id="topBarTitle">FRC Key Binder</span>
+            <select id="projectSelector" style="display: none;"></select>
+            <button id="addProjectButton" style="display: none;">Add Project</button>
+            <div id="timeDate"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div id="background"></div>
+        <div id="mainUI" style="display: none;"></div>
+        <button id="openProject">Open Project</button>
+
+        <!-- Settings Overlay -->
+        <div id="settingsOverlay" class="hidden">
+            <div id="settingsWindow">
+                <h2>Settings</h2>
+                <div id="settingsContent">
+                    <p>Option 1: <input type="checkbox"></p>
+                    <p>Option 2: <input type="checkbox"></p>
+                    <p>Option 3: <input type="checkbox"></p>
+                    <p>
+                        Controller Type:
+                        <select id="controllerType">
+                            <option value="xbox">Xbox Controller</option>
+                            <option value="ps5">PS5 Controller</option>
+                        </select>
+                    </p>
+                </div>
+                <button id="closeSettingsButton">Close</button>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

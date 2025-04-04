@@ -1,76 +1,314 @@
 :root {
-    --primary: rgba(101, 199, 255, 0.8);
-    --primary-back: rgb(255, 255, 255);
-    --contrast: rgb(0, 0, 0);
+  --primary: #0078d7; /* Blue color similar to PathPlanner */
+  --primary-hover: #005a9e; /* Darker blue for hover effects */
+  --background: #1e1e2f; /* Dark background for contrast */
+  --contrast: #ffffff; /* White for text and buttons */
+  --secondary: #2d2d44; /* Secondary dark color for elements */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Mukta", sans-serif;
+  font-size: 9px;
+  background: var(--background);
+  color: var(--contrast);
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 599px) {
+  body {
+    font-size: 6px;
   }
+}
 
-/* Ensure the top bar is styled */
 #topBar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50px; /* Adjust height as needed */
-    background-color: black;
-    z-index: 1000; /* Ensures it stays on top of other elements */
-    display: flex;
-    align-items: center;
-    padding-left: 10px; /* Add some padding for the title */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8vh;
+  background-color: var(--secondary);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 2vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Style for the title text in the top bar */
 #topBarTitle {
-    color: white;
-    font-size: 18px; /* Adjust font size as needed */
-    font-weight: bold;
+  color: var(--contrast);
+  font-size: 2.5vh;
+  font-weight: bold;
 }
 
-/* Style the Open Project button */
+#timeDate {
+  margin-left: auto;
+  margin-right: 3vw;
+  color: var(--contrast);
+  font-size: 1.5vh;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
 #openProject {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--primary); /* Use Pico's primary color */
-    color: var(--contrast); /* Use Pico's contrast color */
-    padding: 20px 40px; /* Increased padding for a larger button */
-    border: none; /* Remove default border */
-    border-radius: 10px; /* Slightly larger rounded corners */
-    font-size: 18px; /* Increased font size */
-    font-weight: bold; /* Bold text */
-    cursor: pointer; /* Pointer cursor on hover */
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Slightly larger shadow */
-    transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary);
+  color: var(--contrast);
+  padding: 1.5rem 3rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 #openProject:hover {
-    background-color: var(--primary); /* Use Pico's hover color */
-    transform: translate(-50%, -50%) scale(1.1); /* Slightly larger hover effect */
+  background-color: var(--primary-hover);
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
 #openProject:active {
-    background-color: var(--contrast); /* Use Pico's active color */
-    transform: translate(-50%, -50%) scale(0.95); /* Slightly shrink on click */
+  background-color: var(--contrast);
+  color: var(--primary);
+  transform: translate(-50%, -50%) scale(0.95);
 }
 
-/* Background div that covers the entire screen */
 #background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-color: var(--primary-back);
-    filter: blur(8px); /* Apply blur effect */
-    -webkit-filter: blur(8px); /* For Safari */
-    z-index: 0; /* Ensure it stays behind other elements */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e1e2f, #2d2d44);
+  z-index: 0;
 }
 
-/* Ensure the main content stays sharp and above the blurred background */
-#topBar, #openProject {
-    z-index: 10; /* Increase z-index to ensure they are above the background */
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6vw;
+  height: 100vh;
+  background-color: var(--secondary);
+  color: var(--contrast);
+  overflow: hidden;
+  transition: width 0.3s ease, height 0.3s ease;
+  z-index: 1000;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+  display: none;
+}
+
+#sidebar:hover {
+  width: 20vw;
+}
+
+#sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  padding-top: 10vh;
+}
+
+#sidebar ul li {
+  padding: 2vh 0;
+  font-size: 2vh; /* Increased font size */
+  color: var(--contrast);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+#sidebar ul li:hover {
+  background-color: var(--primary-hover);
+}
+
+#sidebar ul li .icon {
+  font-size: 3vh;
+  margin-bottom: 1vh;
+}
+
+#sidebar ul li .text {
+  display: none;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  font-size: 2.5vh; /* Increased font size for text */
+}
+
+#sidebar:hover ul li .text {
+  display: inline;
+  opacity: 1;
+}
+
+#settingsOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+#settingsOverlay.hidden {
+  display: none;
+}
+
+#settingsWindow {
+  background-color: var(--secondary);
+  color: var(--contrast);
+  width: 50%;
+  max-width: 600px;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+#settingsWindow h2 {
+  margin-top: 0;
+}
+
+#settingsContent {
+  margin: 1rem 0;
+  text-align: left;
+}
+
+#closeSettingsButton {
+  background-color: var(--primary);
+  color: var(--contrast);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#closeSettingsButton:hover {
+  background-color: var(--primary-hover);
+}
+
+#mainUI {
+  position: absolute;
+  top: 8vh;
+  left: 6vw;
+  width: calc(100% - 6vw);
+  height: calc(100% - 8vh);
+  background-color: orange;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: left 0.3s ease, width 0.3s ease;
+}
+
+#sidebar:hover ~ #mainUI {
+  left: 20vw;
+  width: calc(100% - 20vw);
+}
+
+#projectSelector {
+  margin-left: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  background-color: var(--secondary);
+  color: var(--contrast);
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+#projectSelector:hover,
+#projectSelector:focus {
+  border-color: var(--primary-hover);
+  outline: none;
+}
+
+#projectSelector option {
+  background-color: var(--secondary);
+  color: var(--contrast);
+}
+
+#addProjectButton {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  background-color: var(--primary);
+  color: var(--contrast);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#addProjectButton:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.05);
+}
+
+#addProjectButton:active {
+  background-color: var(--contrast);
+  color: var(--primary);
+  transform: scale(0.95);
+}
+
+/* Loading overlay styles */
+#loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  color: var(--contrast);
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-top: 5px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

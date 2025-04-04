@@ -1,19 +1,21 @@
 {
   "name": "frc-key-binds",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "FRC Key Binder Application",
+  "main": "src/electron.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron .",
+    "debug": "electron . --enable-logging"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Random-Coder-Dude/FRC-Key-Binds.git"
+    "type": "git"
   },
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Random-Coder-Dude/FRC-Key-Binds/issues"
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^35.1.4"
   },
-  "homepage": "https://github.com/Random-Coder-Dude/FRC-Key-Binds#readme"
+  "devDependencies": {
+    "sass": "^1.86.3"
+  }
 }
