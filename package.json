@@ -5,18 +5,36 @@
   "main": "src/electron.js",
   "scripts": {
     "start": "electron .",
-    "debug": "electron . --enable-logging"
+    "debug": "electron . --enable-logging",
+    "dist": "electron-builder"
   },
-  "repository": {
-    "type": "git"
+  "build": {
+    "appId": "com.example.frc-key-binds",
+    "productName": "FRC Key Binds",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "signAndEditExecutable": false
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
-  "author": "",
-  "license": "MIT",
   "dependencies": {
-    "electron": "^35.1.4",
     "express": "^4.21.2"
   },
   "devDependencies": {
+    "electron": "^35.1.4",
+    "electron-builder": "^24.6.0",
     "sass": "^1.86.3"
   }
 }
