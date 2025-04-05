@@ -98,8 +98,8 @@ async function openProject() {
 
         if (hasBuildGradle) {
             const projects = JSON.parse(localStorage.getItem("projects")) || [];
-            if (!projects.includes(directoryHandle)) {
-                projects.push(directoryHandle);
+            if (!projects.includes(directoryHandle.name)) {
+                projects.push(directoryHandle.name);
                 localStorage.setItem("projects", JSON.stringify(projects));
             }
 
@@ -211,6 +211,13 @@ function saveData(filename, content) {
     }, 500);
 }
 
+// Function to clear local storage
+function clearLocalStorage() {
+    localStorage.clear();
+    console.log("Local storage cleared.");
+    alert("Local storage has been cleared.");
+}
+
 // Event listener for DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
     initializeApp();
@@ -225,12 +232,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("settingsOverlay").classList.add("hidden");
     });
 
+    // Add event listener for clearing local storage
+    document.getElementById("clearLocalStorageButton").addEventListener("click", clearLocalStorage);
+
     // Add event listener for project selection changes
     document.getElementById("projectSelector").addEventListener("change", handleProjectSelectionChange);
-    document.getElementById("projectSelector").addEventListener("change", (event) => {
-        console.log("Dropdown change event triggered.");
-        handleProjectSelectionChange(event);
-    });
 
     setInterval(updateTimeDate, 1000);
     updateTimeDate();
