@@ -4,15 +4,15 @@
   "description": "FRC Key Binder Application",
   "main": "src/electron.js",
   "scripts": {
-    "start": "electron .",
-    "debug": "electron . --enable-logging",
-    "dist": "electron-builder"
+    "start": "clear && electron . && clear",
+    "debug": "clear && electron . --enable-logging && clear",
+    "build": "clear && electron-builder"
   },
   "build": {
     "appId": "com.example.frc-key-binds",
     "productName": "FRC Key Binds",
     "directories": {
-      "output": "dist"
+      "output": "dist/${os}"
     },
     "files": [
       "src/**/*",
@@ -20,17 +20,20 @@
     ],
     "win": {
       "target": "nsis",
-      "signAndEditExecutable": false
+      "signAndEditExecutable": false,
+      "icon": "src/assets/icons/icon.ico"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "src/assets/icons/icon.icns"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "icon": "src/assets/icons/icon.png"
     }
   },
   "dependencies": {
-    "express": "^4.21.2"
+
   },
   "devDependencies": {
     "electron": "^35.1.4",

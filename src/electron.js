@@ -100,8 +100,31 @@ app.on('ready', () => {
 
 // Listen for the current project path from the renderer process
 ipcMain.on('set-current-project', (event, projectPath) => {
-    console.log(`Received current project path: ${projectPath}`);
-    currentProject = projectPath;
+    console.log(`Received project path: ${projectPath}`);
+    currentProject = projectPath; // Set the current project path dynamically
+});
+
+// Listen for saving data to the project
+ipcMain.on('save-data-to-project', (event, { filename, content }) => {
+    if (!currentProject) {
+        console.error("No working directory set. Cannot save data.");
+        return;
+    }
+
+    const projectFolder = currentProject; // Use the dynamically set project path
+    ensureProjectFolder(projectFolder);
+
+    const filePath = path.join(projectFolder, filename);
+
+    fs.writeFile(filePath, content, (err) => {
+        if (err) {
+            console.error(`Error saving file: ${err}`);
+            event.reply('save-data-error', `Failed to save file: ${err.message}`);
+        } else {
+            console.log(`File saved successfully: ${filePath}`);
+            event.reply('save-data-success', `File saved successfully: ${filePath}`);
+        }
+    });
 });
 
 app.on('window-all-closed', () => {
