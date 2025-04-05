@@ -13,7 +13,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "electron": "^35.1.4"
+    "electron": "^35.1.4",
+    "express": "^4.21.2"
   },
   "devDependencies": {
     "sass": "^1.86.3"

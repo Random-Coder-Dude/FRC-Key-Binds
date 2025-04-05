@@ -159,17 +159,89 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateTimeDate, 1000);
     updateTimeDate(); // Initial call to set the time and date immediately
 
-    // Handle controller type selection changes
-    const controllerTypeSelect = document.getElementById("controllerType");
-    const controller = document.getElementById("controller");
+    const fetchStatusButton = document.createElement("button");
+    fetchStatusButton.textContent = "Check Backend Status";
+    fetchStatusButton.style.position = "fixed";
+    fetchStatusButton.style.bottom = "10px";
+    fetchStatusButton.style.right = "10px";
+    fetchStatusButton.style.padding = "10px 20px";
+    fetchStatusButton.style.backgroundColor = "#0078d7";
+    fetchStatusButton.style.color = "#ffffff";
+    fetchStatusButton.style.border = "none";
+    fetchStatusButton.style.borderRadius = "5px";
+    fetchStatusButton.style.cursor = "pointer";
 
-    controllerTypeSelect.addEventListener("change", (event) => {
-        const selectedType = event.target.value;
-        controller.className = selectedType; // Update the controller class
+    fetchStatusButton.addEventListener("click", fetchBackendStatus);
+
+    document.body.appendChild(fetchStatusButton);
+
+    const saveTestButton = document.createElement("button");
+    saveTestButton.textContent = "Save Test Data";
+    saveTestButton.style.position = "fixed";
+    saveTestButton.style.bottom = "50px";
+    saveTestButton.style.right = "10px";
+    saveTestButton.style.padding = "10px 20px";
+    saveTestButton.style.backgroundColor = "#0078d7";
+    saveTestButton.style.color = "#ffffff";
+    saveTestButton.style.border = "none";
+    saveTestButton.style.borderRadius = "5px";
+    saveTestButton.style.cursor = "pointer";
+
+    saveTestButton.addEventListener("click", () => {
+        const testFilename = "test.json";
+        const testContent = JSON.stringify({ message: "Hello, Key Binder!" }, null, 2);
+        saveDataToBackend(testFilename, testContent);
     });
 
-    // Set the default controller type to Xbox
-    controller.classList.add("xbox");
+    document.body.appendChild(saveTestButton);
+
+    // Add a button to save arbitrary data
+    const saveArbitraryDataButton = document.createElement("button");
+    saveArbitraryDataButton.textContent = "Save Arbitrary Data";
+    saveArbitraryDataButton.style.position = "fixed";
+    saveArbitraryDataButton.style.bottom = "90px";
+    saveArbitraryDataButton.style.right = "10px";
+    saveArbitraryDataButton.style.padding = "10px 20px";
+    saveArbitraryDataButton.style.backgroundColor = "#0078d7";
+    saveArbitraryDataButton.style.color = "#ffffff";
+    saveArbitraryDataButton.style.border = "1px solid #ffffff"; // Add a border for visibility
+    saveArbitraryDataButton.style.borderRadius = "5px";
+    saveArbitraryDataButton.style.cursor = "pointer";
+    saveArbitraryDataButton.style.zIndex = "2000"; // Ensure it appears above other elements
+
+    saveArbitraryDataButton.addEventListener("click", () => {
+        const filename = prompt("Enter the filename (e.g., data.txt):", "data.txt");
+        const content = prompt("Enter the content to save:", "This is some arbitrary data.");
+        if (filename && content) {
+            saveDataToBackend(filename, content);
+        } else {
+            alert("Filename and content are required to save data.");
+        }
+    });
+
+    document.body.appendChild(saveArbitraryDataButton);
+    console.log("Save Arbitrary Data button added to the DOM.");
+
+    // Handle project selection changes
+    projectSelector.addEventListener("change", (event) => {
+        const selectedProject = event.target.value;
+        console.log(`Selected project: ${selectedProject}`);
+
+        // Save the selected project as the current project
+        localStorage.setItem("currentProject", selectedProject);
+
+        // Notify the main process of the current project path
+        window.electronAPI.setCurrentProject(selectedProject);
+
+        // Update the UI to reflect the selected project
+        topBarTitle.textContent = `Working Directory:`;
+    });
+
+    // Set the initial value of the dropdown to the current project
+    if (currentProject) {
+        projectSelector.value = currentProject;
+        topBarTitle.textContent = `Working Directory:`;
+    }
 });
 
 // Function to handle the Open Project button click
@@ -206,6 +278,9 @@ async function openProject() {
 
             // Save the current project
             localStorage.setItem("currentProject", directoryHandle.name);
+
+            // Notify the main process of the current project path
+            window.electronAPI.setCurrentProject(directoryHandle.name);
 
             // Show a success animation
             triggerDirectoryPickedAnimation(directoryHandle.name);
@@ -277,3 +352,68 @@ async function containsBuildGradle(directoryHandle) {
     }
     return false; // Return false if no build.gradle file is found
 }
+
+// Function to fetch backend status
+async function fetchBackendStatus() {
+    try {
+        const response = await fetch('http://localhost:3000/api/status');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Backend status:", data);
+        alert(`Backend Status: ${data.status}\nTimestamp: ${data.timestamp}`);
+    } catch (error) {
+        console.error("Error fetching backend status:", error);
+        alert("Failed to fetch backend status. Is the backend running?");
+    }
+}
+
+// Function to save data to the backend
+async function saveDataToBackend(filename, content) {
+    try {
+        const response = await fetch('http://localhost:3000/api/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename, content }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Data saved successfully:", data);
+        alert(`Data saved successfully to: ${data.filePath}`);
+    } catch (error) {
+        console.error("Error saving data to backend:", error);
+        alert("Failed to save data. Check the console for details.");
+    }
+}
+
+// Add a button to save arbitrary data
+document.addEventListener("DOMContentLoaded", () => {
+    const saveArbitraryDataButton = document.createElement("button");
+    saveArbitraryDataButton.textContent = "Save Arbitrary Data";
+    saveArbitraryDataButton.style.position = "fixed";
+    saveArbitraryDataButton.style.bottom = "90px";
+    saveArbitraryDataButton.style.right = "10px";
+    saveArbitraryDataButton.style.padding = "10px 20px";
+    saveArbitraryDataButton.style.backgroundColor = "#0078d7";
+    saveArbitraryDataButton.style.color = "#ffffff";
+    saveArbitraryDataButton.style.border = "1px solid #ffffff";
+    saveArbitraryDataButton.style.borderRadius = "5px";
+    saveArbitraryDataButton.style.cursor = "pointer";
+
+    saveArbitraryDataButton.addEventListener("click", () => {
+        const filename = prompt("Enter the filename (e.g., data.txt):", "data.txt");
+        const content = prompt("Enter the content to save:", "This is some arbitrary data.");
+        if (filename && content) {
+            saveDataToBackend(filename, content);
+        } else {
+            alert("Filename and content are required to save data.");
+        }
+    });
+
+    document.body.appendChild(saveArbitraryDataButton);
+});
