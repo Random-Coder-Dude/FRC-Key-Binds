@@ -91,10 +91,10 @@ async function openProject() {
         }
 
         const directoryHandle = await window.showDirectoryPicker();
-        const directoryPath = directoryHandle.name; // Display name
+        const directoryName = directoryHandle.name; // Display name
         const fullPath = directoryHandle; // Full path
 
-        console.log("Directory selected:", fullPath);
+        console.log("Directory selected:", directoryName);
 
         const hasBuildGradle = await containsBuildGradle(directoryHandle);
         console.log("Contains build.gradle:", hasBuildGradle);
@@ -103,16 +103,16 @@ async function openProject() {
             const projects = JSON.parse(localStorage.getItem("projects")) || [];
             const projectPaths = JSON.parse(localStorage.getItem("projectPaths")) || {};
 
-            if (!projects.includes(directoryPath)) {
-                projects.push(directoryPath);
-                projectPaths[directoryPath] = fullPath;
+            if (!projects.includes(directoryName)) {
+                projects.push(directoryName);
+                projectPaths[directoryName] = fullPath;
                 localStorage.setItem("projects", JSON.stringify(projects));
                 localStorage.setItem("projectPaths", JSON.stringify(projectPaths));
             }
 
-            localStorage.setItem("currentProject", directoryPath);
-            updateProjectSelector(directoryPath);
-            triggerDirectoryPickedAnimation(directoryPath);
+            localStorage.setItem("currentProject", directoryName);
+            updateProjectSelector(directoryName);
+            triggerDirectoryPickedAnimation(directoryName);
         } else {
             alert("The selected directory does not contain a build.gradle file.");
             console.error("build.gradle file not found in the selected directory.");
@@ -219,6 +219,9 @@ function saveData(filename, content) {
         return;
     }
 
+    console.log(`Saving data to full path: ${fullPath}`);
+    console.log(`Filename: ${filename}, Content: ${content}`);
+
     showLoading("Saving Data...");
     window.electronAPI.saveDataToProject(fullPath, { filename, content });
 
@@ -275,6 +278,18 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.getElementById("projectSelector").addEventListener("change", handleProjectSelectionChange);
+
+document.getElementById("view-local-storage-btn").addEventListener("click", () => {
+    window.electronAPI.viewLocalStorage();
+});
+
+window.electronAPI.onViewLocalStorageSuccess((data) => {
+    alert(`Local Storage Data: ${data}`);
+});
+
+window.electronAPI.onViewLocalStorageError((error) => {
+    alert(`Error: ${error}`);
+});
 
 console.log("window.electronAPI:", window.electronAPI);
 

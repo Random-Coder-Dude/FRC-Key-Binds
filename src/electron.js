@@ -153,6 +153,21 @@ ipcMain.on('save-data-to-project', (event, { fullPath, filename, content }) => {
     });
 });
 
+// Listen for a request to view local storage
+ipcMain.on('view-local-storage', (event) => {
+    const localStoragePath = path.join(app.getPath('userData'), 'localStorage.json');
+
+    fs.readFile(localStoragePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(`Error reading local storage: ${err}`);
+            event.reply('view-local-storage-error', 'Failed to read local storage.');
+        } else {
+            console.log('Local storage data retrieved successfully.');
+            event.reply('view-local-storage-success', data);
+        }
+    });
+});
+
 app.on('window-all-closed', () => {
     console.log("All windows closed.");
     if (process.platform !== 'darwin') {
