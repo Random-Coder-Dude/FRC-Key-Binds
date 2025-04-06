@@ -122,7 +122,7 @@ async function openProject() {
 
 // Function to handle project selection changes
 function handleProjectSelectionChange(event) {
-    const selectedProject = event.target.value;
+    const selectedProject = event.target.value; // Get the selected project from the dropdown
     console.log(`Selected project: ${selectedProject}`);
 
     // Save the selected project as the current project
@@ -257,7 +257,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-ipcMain.on('set-current-project', (event, projectPath) => {
-    console.log(`Received project path in main process: ${projectPath}`);
-    currentProject = projectPath; // Set the current project path dynamically
-});
+document.getElementById("projectSelector").addEventListener("change", handleProjectSelectionChange);
+
+console.log("window.electronAPI:", window.electronAPI);
+
+if (!window.electronAPI) {
+    console.error("window.electronAPI is not defined. Check preload.js and electron.js configuration.");
+}

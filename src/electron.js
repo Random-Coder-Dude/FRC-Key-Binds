@@ -102,12 +102,17 @@ app.on('ready', () => {
 ipcMain.on('set-current-project', (event, projectPath) => {
     console.log(`Received project path: ${projectPath}`);
     currentProject = projectPath; // Set the current project path dynamically
+
+    // Log the updated working directory
+    const workingDirectory = getWorkingDirectory();
+    console.log(`Working directory updated to: ${workingDirectory}`);
 });
 
 // Listen for saving data to the project
 ipcMain.on('save-data-to-project', (event, { filename, content }) => {
     if (!currentProject) {
         console.error("No working directory set. Cannot save data.");
+        event.reply('save-data-error', "No working directory set.");
         return;
     }
 
@@ -143,4 +148,9 @@ app.on('activate', () => {
         mainWindow.setMenuBarVisibility(false);
         mainWindow.loadFile('src/index.html');
     }
+});
+
+ipcMain.on('set-current-project', (event, projectPath) => {
+    console.log(`Received project path in main process: ${projectPath}`);
+    currentProject = projectPath; // Set the current project path dynamically
 });
