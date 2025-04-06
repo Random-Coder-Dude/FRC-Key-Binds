@@ -132,6 +132,27 @@ ipcMain.on('save-data-to-project', (event, { filename, content }) => {
     });
 });
 
+// Listen for saving data to the project using full path
+ipcMain.on('save-data-to-project', (event, { fullPath, filename, content }) => {
+    if (!fullPath) {
+        console.error("No full path provided. Cannot save data.");
+        event.reply('save-data-error', "No full path provided.");
+        return;
+    }
+
+    const filePath = path.join(fullPath, filename);
+
+    fs.writeFile(filePath, content, (err) => {
+        if (err) {
+            console.error(`Error saving file: ${err}`);
+            event.reply('save-data-error', `Failed to save file: ${err.message}`);
+        } else {
+            console.log(`File saved successfully: ${filePath}`);
+            event.reply('save-data-success', `File saved successfully: ${filePath}`);
+        }
+    });
+});
+
 app.on('window-all-closed', () => {
     console.log("All windows closed.");
     if (process.platform !== 'darwin') {

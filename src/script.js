@@ -91,21 +91,28 @@ async function openProject() {
         }
 
         const directoryHandle = await window.showDirectoryPicker();
-        console.log("Directory selected:", directoryHandle);
+        const directoryPath = directoryHandle.name; // Display name
+        const fullPath = directoryHandle; // Full path
+
+        console.log("Directory selected:", fullPath);
 
         const hasBuildGradle = await containsBuildGradle(directoryHandle);
         console.log("Contains build.gradle:", hasBuildGradle);
 
         if (hasBuildGradle) {
             const projects = JSON.parse(localStorage.getItem("projects")) || [];
-            if (!projects.includes(directoryHandle.name)) {
-                projects.push(directoryHandle.name);
+            const projectPaths = JSON.parse(localStorage.getItem("projectPaths")) || {};
+
+            if (!projects.includes(directoryPath)) {
+                projects.push(directoryPath);
+                projectPaths[directoryPath] = fullPath;
                 localStorage.setItem("projects", JSON.stringify(projects));
+                localStorage.setItem("projectPaths", JSON.stringify(projectPaths));
             }
 
-            localStorage.setItem("currentProject", directoryHandle);
-            updateProjectSelector(directoryHandle.name);
-            triggerDirectoryPickedAnimation(directoryHandle.name);
+            localStorage.setItem("currentProject", directoryPath);
+            updateProjectSelector(directoryPath);
+            triggerDirectoryPickedAnimation(directoryPath);
         } else {
             alert("The selected directory does not contain a build.gradle file.");
             console.error("build.gradle file not found in the selected directory.");
@@ -202,8 +209,18 @@ function saveData(filename, content) {
         return;
     }
 
+    const currentProject = localStorage.getItem("currentProject");
+    const projectPaths = JSON.parse(localStorage.getItem("projectPaths")) || {};
+    const fullPath = projectPaths[currentProject];
+
+    if (!fullPath) {
+        console.error("Full path for the current project not found.");
+        alert("Failed to save data. Full path for the current project is missing.");
+        return;
+    }
+
     showLoading("Saving Data...");
-    window.electronAPI.saveDataToProject(filename, content);
+    window.electronAPI.saveDataToProject(fullPath, { filename, content });
 
     setTimeout(() => {
         hideLoading();
