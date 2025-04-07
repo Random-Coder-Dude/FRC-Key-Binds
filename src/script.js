@@ -36,6 +36,7 @@ function updateUI({ showHome = false, showMain = false }) {
             projectSelector.style.display = "none";
             addProjectButton.style.display = "none";
             topBar.style.display = "flex";
+            topBarTitle.textContent = "FRC Key Binder";
             sidebar.style.display = "none";
             mainUI.style.display = "none";
         }
@@ -51,7 +52,7 @@ function updateUI({ showHome = false, showMain = false }) {
         }
 
         hideLoading();
-    }, 500); // Add a slight delay for the loading animation
+    }, 500);
 }
 
 // Function to initialize the app
@@ -67,9 +68,8 @@ function initializeApp() {
             .join("");
 
         if (currentProject) {
-            console.log("test");
             projectSelector.value = currentProject;
-            topBarTitle.textContent = `Working Directory: ${currentProject}`;
+            topBarTitle.textContent = `Working Directory:`;
         }
 
         updateUI({ showMain: true });
@@ -82,22 +82,16 @@ function initializeApp() {
 async function openProject() {
     try {
         showLoading("Opening project...");
-        console.log("Opening project...");
 
         if (!window.showDirectoryPicker) {
             alert("Your browser does not support the directory picker API.");
-            console.error("Directory picker API not supported.");
             return;
         }
 
-        const directoryHandle = await window.showDirectoryPicker();
-        const directoryName = directoryHandle.name; // Display name
-        const fullPath = directoryHandle; // Full path
+        const fullPath = await window.electronAPI.showDirectoryPicker();
+        const directoryName = fullPath.split('/').pop(); // Extract directory name from fullPath
 
-        console.log("Directory selected:", directoryName);
-
-        const hasBuildGradle = await containsBuildGradle(directoryHandle);
-        console.log("Contains build.gradle:", hasBuildGradle);
+        const hasBuildGradle = await containsBuildGradle(fullPath);
 
         if (hasBuildGradle) {
             const projects = JSON.parse(localStorage.getItem("projects")) || [];
@@ -115,7 +109,6 @@ async function openProject() {
             triggerDirectoryPickedAnimation(directoryName);
         } else {
             alert("The selected directory does not contain a build.gradle file.");
-            console.error("build.gradle file not found in the selected directory.");
         }
     } catch (error) {
         if (error.name !== "AbortError") {
@@ -123,22 +116,18 @@ async function openProject() {
         }
     } finally {
         hideLoading();
-        console.log("Finished opening project.");
     }
 }
 
 // Function to handle project selection changes
 function handleProjectSelectionChange(event) {
     const selectedProject = event.target.value; // Get the selected project from the dropdown
-    console.log(`Selected project: ${selectedProject}`);
 
     // Save the selected project as the current project
     localStorage.setItem("currentProject", selectedProject);
-    console.log("Saved to localStorage:", localStorage.getItem("currentProject"));
 
     // Notify the main process of the selected project path
     window.electronAPI.setCurrentProject(selectedProject);
-    console.log("Notified main process of the selected project.");
 
     // Update the UI and title dynamically
     updateProjectSelector(selectedProject);
@@ -154,32 +143,26 @@ function updateProjectSelector(selectedProject) {
     projectSelector.innerHTML = projects
         .map((project) => `<option value="${project}">${project}</option>`)
         .join("");
-    console.log("Dropdown updated with projects:", projects);
 
     // Set the selected project in the dropdown
     projectSelector.value = selectedProject;
-    console.log("Dropdown value set to:", selectedProject);
 
     // Update the top bar title
-    topBarTitle.textContent = `Working Directory: ${selectedProject}`;
-    console.log("Top bar title updated to:", topBarTitle.textContent);
+    topBarTitle.textContent = `Working Directory:`;
 
     // Update the UI to reflect the main app view
     updateUI({ showMain: true });
 }
 
 // Function to check if a directory contains a build.gradle file
-async function containsBuildGradle(directoryHandle) {
+async function containsBuildGradle(directoryPath) {
     try {
-        for await (const [name, handle] of directoryHandle.entries()) {
-            if (name.toLowerCase() === "build.gradle" && handle.kind === "file") {
-                return true;
-            }
-        }
+        const contents = await window.electronAPI.getDirectoryContents(directoryPath);
+        return contents.some((entry) => entry.name.toLowerCase() === "build.gradle" && entry.isFile);
     } catch (error) {
         console.error("Error reading directory:", error);
+        return false;
     }
-    return false;
 }
 
 // Function to show an animation when a directory is picked
@@ -213,17 +196,14 @@ function saveData(filename, content) {
     const projectPaths = JSON.parse(localStorage.getItem("projectPaths")) || {};
     const fullPath = projectPaths[currentProject];
 
-    if (!fullPath) {
-        console.error("Full path for the current project not found.");
-        alert("Failed to save data. Full path for the current project is missing.");
+    if (!fullPath || typeof fullPath !== "string") {
+        console.error("Full path for the current project is invalid or not found.");
+        alert("Failed to save data. Full path for the current project is missing or invalid.");
         return;
     }
 
-    console.log(`Saving data to full path: ${fullPath}`);
-    console.log(`Filename: ${filename}, Content: ${content}`);
-
     showLoading("Saving Data...");
-    window.electronAPI.saveDataToProject(fullPath, { filename, content });
+    window.electronAPI.saveDataToProject(fullPath, filename, content);
 
     setTimeout(() => {
         hideLoading();
@@ -234,7 +214,6 @@ function saveData(filename, content) {
 // Function to clear local storage
 function clearLocalStorage() {
     localStorage.clear();
-    console.log("Local storage cleared.");
     alert("Local storage has been cleared.");
 }
 
@@ -266,13 +245,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const projectSelector = document.getElementById("projectSelector");
     if (!projectSelector) {
         console.error("Project selector element not found in the DOM.");
-    } else {
-        console.log("Project selector element found:", projectSelector);
     }
 
     // Add event listener for project selection changes
     projectSelector.addEventListener("change", (event) => {
-        console.log("Dropdown change event triggered.");
         handleProjectSelectionChange(event);
     });
 });
@@ -290,8 +266,6 @@ window.electronAPI.onViewLocalStorageSuccess((data) => {
 window.electronAPI.onViewLocalStorageError((error) => {
     alert(`Error: ${error}`);
 });
-
-console.log("window.electronAPI:", window.electronAPI);
 
 if (!window.electronAPI) {
     console.error("window.electronAPI is not defined. Check preload.js and electron.js configuration.");
