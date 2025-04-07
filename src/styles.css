@@ -194,7 +194,10 @@ body {
 
 #settingsContent {
   margin: 1rem 0;
-  text-align: left;
+  text-align: center;
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 1rem; /* Add spacing between buttons */
 }
 
 #closeSettingsButton {
@@ -311,4 +314,29 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+.settings-button {
+  background-color: var(--primary);
+  color: var(--contrast);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%; /* Make buttons take full width of the container */
+  max-width: 300px; /* Optional: Limit the maximum width */
+  margin: 0 auto; /* Center the buttons horizontally */
+}
+
+.settings-button:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.05);
+}
+
+.settings-button:active {
+  background-color: var(--contrast);
+  color: var(--primary);
+  transform: scale(0.95);
 }
