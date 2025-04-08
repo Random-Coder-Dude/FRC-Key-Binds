@@ -59,9 +59,17 @@ ipcMain.on('save-data-to-project', (event, { fullPath, filename, content }) => {
         return;
     }
 
-    const filePath = path.join(fullPath, filename);
+    const filePath = path.join(fullPath, 'src', 'main', 'deploy', 'Keybinder', filename);
 
     try {
+        // Ensure the directory exists
+        const directory = path.dirname(filePath);
+        if (!fs.existsSync(directory)) {
+            fs.mkdirSync(directory, { recursive: true });
+            console.log(`Created directory: ${directory}`);
+        }
+
+        // Write the file
         fs.writeFileSync(filePath, content, 'utf8');
         console.log(`File saved successfully: ${filePath}`);
         event.reply('save-data-success', `File saved successfully: ${filePath}`);
@@ -72,6 +80,7 @@ ipcMain.on('save-data-to-project', (event, { fullPath, filename, content }) => {
 });
 
 ipcMain.handle('show-directory-picker', async () => {
+    console.log("dialog opened")
     const result = await dialog.showOpenDialog({
         properties: ['openDirectory'],
     });

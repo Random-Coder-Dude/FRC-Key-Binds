@@ -17,11 +17,12 @@ function initializeApp() {
         if (currentProject) {
             projectSelector.value = currentProject;
             topBarTitle.textContent = `Working Directory:`;
+            updateUI({ showMain: true }); // Ensure the main UI is shown
+        } else {
+            updateUI({ showHome: true }); // Show the home screen if no current project
         }
-
-        updateUI({ showMain: true });
     } else {
-        updateUI({ showHome: true });
+        updateUI({ showHome: true }); // Show the home screen if no projects exist
     }
 }
 
@@ -37,46 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeSettingsButton = document.getElementById("closeSettingsButton");
     const clearLocalStorageButton = document.getElementById("clearLocalStorageButton");
     const projectSelector = document.getElementById("projectSelector");
-
-    // Remove existing event listeners before adding new ones
-    if (openProjectButton) {
-        openProjectButton.replaceWith(openProjectButton.cloneNode(true));
-        document.getElementById("openProject").addEventListener("click", openProject);
-    }
-
-    if (addProjectButton) {
-        addProjectButton.replaceWith(addProjectButton.cloneNode(true));
-        document.getElementById("addProjectButton").addEventListener("click", openProject);
-    }
-
-    if (homeButton) {
-        homeButton.replaceWith(homeButton.cloneNode(true));
-        document.getElementById("homeButton").addEventListener("click", () => updateUI({ showHome: true }));
-    }
-
-    if (settingsButton) {
-        settingsButton.replaceWith(settingsButton.cloneNode(true));
-        document.getElementById("settingsButton").addEventListener("click", () => {
-            document.getElementById("settingsOverlay").classList.remove("hidden");
-        });
-    }
-
-    if (closeSettingsButton) {
-        closeSettingsButton.replaceWith(closeSettingsButton.cloneNode(true));
-        document.getElementById("closeSettingsButton").addEventListener("click", () => {
-            document.getElementById("settingsOverlay").classList.add("hidden");
-        });
-    }
-
-    if (clearLocalStorageButton) {
-        clearLocalStorageButton.replaceWith(clearLocalStorageButton.cloneNode(true));
-        document.getElementById("clearLocalStorageButton").addEventListener("click", clearLocalStorage);
-    }
-
-    if (projectSelector) {
-        projectSelector.replaceWith(projectSelector.cloneNode(true));
-        document.getElementById("projectSelector").addEventListener("change", handleProjectSelectionChange);
-    }
 
     // Update time and date periodically
     setInterval(updateTimeDate, 1000);

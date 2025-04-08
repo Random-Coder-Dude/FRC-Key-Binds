@@ -31,19 +31,18 @@ function updateUI({ showHome = false, showMain = false }) {
 
     setTimeout(() => {
         if (showHome) {
-            background.style.display = "none";
-            openProjectButton.style.display = "flex";
+            background.style.display = "block";
+            openProjectButton.style.display = "flex"; // Show the open project button
             projectSelector.style.display = "none";
             addProjectButton.style.display = "none";
             topBar.style.display = "flex";
-            topBarTitle.textContent = "FRC Key Binder";
             sidebar.style.display = "none";
             mainUI.style.display = "none";
         }
 
         if (showMain) {
             background.style.display = "none";
-            openProjectButton.style.display = "none";
+            openProjectButton.style.display = "none"; // Hide the open project button
             projectSelector.style.display = "inline-block";
             addProjectButton.style.display = "inline-block";
             topBar.style.display = "flex";
