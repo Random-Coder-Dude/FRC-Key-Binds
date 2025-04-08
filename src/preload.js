@@ -9,6 +9,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
         const result = await ipcRenderer.invoke('show-directory-picker');
         return result.filePaths[0];
     },
+    getDirectoryName: async (directoryPath) => {
+        return await ipcRenderer.invoke('get-directory-name', directoryPath); // Pass directoryPath to the handler
+    },
     getDirectoryContents: async (directoryPath) => {
         return await ipcRenderer.invoke('get-directory-contents', directoryPath);
     },

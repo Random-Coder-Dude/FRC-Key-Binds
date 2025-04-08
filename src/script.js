@@ -83,13 +83,16 @@ async function openProject() {
     try {
         showLoading("Opening project...");
 
-        if (!window.showDirectoryPicker) {
-            alert("Your browser does not support the directory picker API.");
+        const fullPath = await window.electronAPI.showDirectoryPicker();
+
+        if (!fullPath) {
+            console.log("Directory selection canceled.");
             return;
         }
 
-        const fullPath = await window.electronAPI.showDirectoryPicker();
-        const directoryName = fullPath.split('/').pop(); // Extract directory name from fullPath
+        const directoryName = await window.electronAPI.getDirectoryName(fullPath); // Pass fullPath to getDirectoryName
+        console.log("Full path:", fullPath);
+        console.log("Directory name:", directoryName);
 
         const hasBuildGradle = await containsBuildGradle(fullPath);
 

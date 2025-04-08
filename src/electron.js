@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 let mainWindow;
 let currentProject = null;
@@ -76,6 +77,10 @@ ipcMain.handle('show-directory-picker', async () => {
         properties: ['openDirectory'],
     });
     return result;
+});
+
+ipcMain.handle('get-directory-name', async (event, directoryPath) => {
+    return path.basename(directoryPath); // Extract the directory name
 });
 
 ipcMain.handle('get-directory-contents', async (event, directoryPath) => {
