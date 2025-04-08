@@ -337,6 +337,6 @@ body {
 
 .settings-button:active {
   background-color: var(--contrast);
-  color: var(--primary);
+  color: var (--primary);
   transform: scale(0.95);
 }
