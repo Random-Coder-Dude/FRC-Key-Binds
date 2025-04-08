@@ -1,10 +1,6 @@
-import { showLoading, hideLoading, updateUI, updateTimeDate } from "./ui.js";
-import { saveData, clearLocalStorage } from "./storage.js";
-import {
-    openProject,
-    handleProjectSelectionChange,
-    updateProjectSelector,
-} from "./project.js";
+import { updateUI, updateTimeDate } from "./ui.js";
+import { clearLocalStorage } from "./storage.js";
+import { openProject, handleProjectSelectionChange } from "./project.js";
 
 // Function to initialize the app
 function initializeApp() {
@@ -33,6 +29,7 @@ function initializeApp() {
 document.addEventListener("DOMContentLoaded", () => {
     initializeApp();
 
+    // Add event listeners only if elements exist
     const openProjectButton = document.getElementById("openProject");
     const addProjectButton = document.getElementById("addProjectButton");
     const homeButton = document.getElementById("homeButton");
@@ -42,36 +39,46 @@ document.addEventListener("DOMContentLoaded", () => {
     const projectSelector = document.getElementById("projectSelector");
 
     // Remove existing event listeners before adding new ones
-    openProjectButton.replaceWith(openProjectButton.cloneNode(true));
-    addProjectButton.replaceWith(addProjectButton.cloneNode(true));
-    homeButton.replaceWith(homeButton.cloneNode(true));
-    settingsButton.replaceWith(settingsButton.cloneNode(true));
-    closeSettingsButton.replaceWith(closeSettingsButton.cloneNode(true));
-    clearLocalStorageButton.replaceWith(clearLocalStorageButton.cloneNode(true));
-    projectSelector.replaceWith(projectSelector.cloneNode(true));
+    if (openProjectButton) {
+        openProjectButton.replaceWith(openProjectButton.cloneNode(true));
+        document.getElementById("openProject").addEventListener("click", openProject);
+    }
 
-    // Reassign variables to the cloned elements
-    const newOpenProjectButton = document.getElementById("openProject");
-    const newAddProjectButton = document.getElementById("addProjectButton");
-    const newHomeButton = document.getElementById("homeButton");
-    const newSettingsButton = document.getElementById("settingsButton");
-    const newCloseSettingsButton = document.getElementById("closeSettingsButton");
-    const newClearLocalStorageButton = document.getElementById("clearLocalStorageButton");
-    const newProjectSelector = document.getElementById("projectSelector");
+    if (addProjectButton) {
+        addProjectButton.replaceWith(addProjectButton.cloneNode(true));
+        document.getElementById("addProjectButton").addEventListener("click", openProject);
+    }
 
-    // Add event listeners to the cloned elements
-    newOpenProjectButton.addEventListener("click", openProject);
-    newAddProjectButton.addEventListener("click", openProject);
-    newHomeButton.addEventListener("click", () => updateUI({ showHome: true }));
-    newSettingsButton.addEventListener("click", () => {
-        document.getElementById("settingsOverlay").classList.remove("hidden");
-    });
-    newCloseSettingsButton.addEventListener("click", () => {
-        document.getElementById("settingsOverlay").classList.add("hidden");
-    });
-    newClearLocalStorageButton.addEventListener("click", clearLocalStorage);
-    newProjectSelector.addEventListener("change", handleProjectSelectionChange);
+    if (homeButton) {
+        homeButton.replaceWith(homeButton.cloneNode(true));
+        document.getElementById("homeButton").addEventListener("click", () => updateUI({ showHome: true }));
+    }
 
+    if (settingsButton) {
+        settingsButton.replaceWith(settingsButton.cloneNode(true));
+        document.getElementById("settingsButton").addEventListener("click", () => {
+            document.getElementById("settingsOverlay").classList.remove("hidden");
+        });
+    }
+
+    if (closeSettingsButton) {
+        closeSettingsButton.replaceWith(closeSettingsButton.cloneNode(true));
+        document.getElementById("closeSettingsButton").addEventListener("click", () => {
+            document.getElementById("settingsOverlay").classList.add("hidden");
+        });
+    }
+
+    if (clearLocalStorageButton) {
+        clearLocalStorageButton.replaceWith(clearLocalStorageButton.cloneNode(true));
+        document.getElementById("clearLocalStorageButton").addEventListener("click", clearLocalStorage);
+    }
+
+    if (projectSelector) {
+        projectSelector.replaceWith(projectSelector.cloneNode(true));
+        document.getElementById("projectSelector").addEventListener("change", handleProjectSelectionChange);
+    }
+
+    // Update time and date periodically
     setInterval(updateTimeDate, 1000);
     updateTimeDate();
 });

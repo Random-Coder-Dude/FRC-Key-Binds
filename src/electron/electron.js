@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
 
 let mainWindow;
 let currentProject = null;
@@ -35,11 +34,11 @@ app.on('ready', () => {
         ...windowOptions,
         webPreferences: {
             contextIsolation: true,
-            preload: path.join(__dirname, 'preload.js'),
+            preload: path.join(__dirname, 'preload.js'), // Corrected path
         },
     });
     mainWindow.setMenuBarVisibility(false);
-    mainWindow.loadFile('src/index.html');
+    mainWindow.loadFile('src/html/index.html'); // Ensure this path is correct
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -48,7 +47,7 @@ app.on('ready', () => {
     console.log("Main window created and loaded.");
 });
 
-ipcMain.on('set-current-project', (event, projectPath) => {
+ipcMain.on('set-current-project', (_event, projectPath) => {
     console.log(`Received project path: ${projectPath}`);
     currentProject = projectPath;
 });
@@ -79,11 +78,11 @@ ipcMain.handle('show-directory-picker', async () => {
     return result;
 });
 
-ipcMain.handle('get-directory-name', async (event, directoryPath) => {
+ipcMain.handle('get-directory-name', async (_event, directoryPath) => {
     return path.basename(directoryPath); // Extract the directory name
 });
 
-ipcMain.handle('get-directory-contents', async (event, directoryPath) => {
+ipcMain.handle('get-directory-contents', async (_event, directoryPath) => {
     try {
         const contents = fs.readdirSync(directoryPath).map((fileName) => ({
             name: fileName,

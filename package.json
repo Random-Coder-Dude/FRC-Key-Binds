@@ -2,7 +2,7 @@
   "name": "frc-key-binds",
   "version": "1.0.0",
   "description": "FRC Key Binder Application",
-  "main": "src/electron.js",
+  "main": "src/electron/electron.js",
   "scripts": {
     "start": "clear && electron . && clear",
     "debug": "clear && electron . --enable-logging && clear",

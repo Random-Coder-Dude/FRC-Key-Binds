@@ -244,31 +244,25 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTimeDate();
 });
 
+// Remove duplicate event listeners
 document.addEventListener("DOMContentLoaded", () => {
     const projectSelector = document.getElementById("projectSelector");
     if (!projectSelector) {
         console.error("Project selector element not found in the DOM.");
     }
-
-    // Add event listener for project selection changes
-    projectSelector.addEventListener("change", (event) => {
-        handleProjectSelectionChange(event);
-    });
 });
 
-document.getElementById("projectSelector").addEventListener("change", handleProjectSelectionChange);
+// Remove duplicate event listener for project selection changes
+document.getElementById("projectSelector")?.addEventListener("change", handleProjectSelectionChange);
 
-document.getElementById("view-local-storage-btn").addEventListener("click", () => {
+// Remove duplicate event listener for viewing local storage
+document.getElementById("view-local-storage-btn")?.addEventListener("click", () => {
     window.electronAPI.viewLocalStorage();
 });
 
-window.electronAPI.onViewLocalStorageSuccess((data) => {
-    alert(`Local Storage Data: ${data}`);
-});
-
-window.electronAPI.onViewLocalStorageError((error) => {
-    alert(`Error: ${error}`);
-});
+// Remove duplicate Electron API listeners
+window.electronAPI.onViewLocalStorageSuccess = null;
+window.electronAPI.onViewLocalStorageError = null;
 
 if (!window.electronAPI) {
     console.error("window.electronAPI is not defined. Check preload.js and electron.js configuration.");
