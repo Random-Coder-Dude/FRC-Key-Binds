@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
-const fs = require('fs');
+const editJsonFile = require("edit-json-file");
+const fs = require('fs/promises'); // Use promises for file operations
 
 let mainWindow;
 let currentProject = null;
@@ -12,21 +13,6 @@ const windowOptions = {
 };
 
 console.log("Starting Electron app...");
-
-const getWorkingDirectory = () => {
-    if (!currentProject) {
-        console.error("No working directory set.");
-        return null;
-    }
-    return path.join(currentProject, 'deploy', 'keybinder');
-};
-
-const ensureProjectFolder = (projectFolder) => {
-    if (!fs.existsSync(projectFolder)) {
-        fs.mkdirSync(projectFolder, { recursive: true });
-        console.log(`Created directory: ${projectFolder}`);
-    }
-};
 
 app.on('ready', () => {
     console.log("App is ready. Creating main window...");
@@ -52,35 +38,58 @@ ipcMain.on('set-current-project', (_event, projectPath) => {
     currentProject = projectPath;
 });
 
-ipcMain.on('save-data-to-project', (event, { fullPath, filename, content }) => {
-    if (!fullPath || !filename || !content) {
+ipcMain.on('save-data-to-project', async (event, { fullPath, filename, key, content }) => {
+    if (!fullPath || !filename || !key || !content) {
         console.error("Invalid parameters provided for saving data.");
-        event.reply('save-data-error', "Invalid parameters provided.");
+        event.reply('save-data-error', {
+            message: "Invalid parameters provided.",
+            details: { fullPath, filename, key, content },
+        });
         return;
     }
 
     const filePath = path.join(fullPath, 'src', 'main', 'deploy', 'Keybinder', filename);
 
     try {
-        // Ensure the directory exists
-        const directory = path.dirname(filePath);
-        if (!fs.existsSync(directory)) {
-            fs.mkdirSync(directory, { recursive: true });
-            console.log(`Created directory: ${directory}`);
+        // Load or create the JSON file
+        const file = editJsonFile(filePath, { autosave: true });
+
+        // Retrieve the keybinds array
+        const keybinds = file.get("keybinds") || [];
+
+        // Find the object with the matching key
+        const targetKeybind = keybinds.find((keybind) => keybind.key === key);
+
+        if (targetKeybind) {
+            // Update the action and parameters of the matching keybind
+            targetKeybind.action = content.action;
+            targetKeybind.parameters = content.parameters;
+        } else {
+            console.error(`Key "${key}" not found in keybinds.`);
+            event.reply('save-data-error', {
+                message: `Key "${key}" not found in keybinds.`,
+            });
+            return;
         }
 
-        // Write the file
-        fs.writeFileSync(filePath, content, 'utf8');
-        console.log(`File saved successfully: ${filePath}`);
-        event.reply('save-data-success', `File saved successfully: ${filePath}`);
+        // Save the updated keybinds array back to the file
+        file.set("keybinds", keybinds);
+
+        console.log(`Data saved successfully for key "${key}": ${filePath}`);
+        console.log(file.toObject());
+
+        event.reply('save-data-success', `Data saved successfully for key "${key}": ${filePath}`);
     } catch (err) {
-        console.error(`Error saving file: ${err.message}`);
-        event.reply('save-data-error', `Failed to save file: ${err.message}`);
+        console.error(`Error saving data: ${err.message}`);
+        event.reply('save-data-error', {
+            message: "Failed to save data.",
+            error: err.message,
+        });
     }
 });
 
 ipcMain.handle('show-directory-picker', async () => {
-    console.log("dialog opened")
+    console.log("dialog opened");
     const result = await dialog.showOpenDialog({
         properties: ['openDirectory'],
     });
@@ -93,11 +102,11 @@ ipcMain.handle('get-directory-name', async (_event, directoryPath) => {
 
 ipcMain.handle('get-directory-contents', async (_event, directoryPath) => {
     try {
-        const contents = fs.readdirSync(directoryPath).map((fileName) => ({
-            name: fileName,
-            isFile: fs.statSync(path.join(directoryPath, fileName)).isFile(),
+        const fileNames = await fs.readdir(directoryPath, { withFileTypes: true });
+        return fileNames.map((file) => ({
+            name: file.name,
+            isFile: file.isFile(),
         }));
-        return contents;
     } catch (error) {
         console.error("Error reading directory contents:", error);
         throw error;

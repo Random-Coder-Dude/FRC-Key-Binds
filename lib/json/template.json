@@ -1,0 +1,138 @@
+{
+    "keybinds": [
+        {
+            "ports": {
+                "driver": 0,
+                "operator": 1
+            }
+        },
+        {
+            "key": "A",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "B",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "X",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "Y",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "Up",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "Down",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "Left",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "Right",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "Start",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "Back",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "LB",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "RB",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "LT",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "RT",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "LS",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        },
+        {
+            "key": "RS",
+            "action": null,
+            "parameters": {
+                "ActivationType": "off",
+                "SmoothingType": "none"
+            }
+        }
+    ]
+}

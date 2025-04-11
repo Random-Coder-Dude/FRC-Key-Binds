@@ -189,7 +189,7 @@ function updateTimeDate() {
 }
 
 // Function to save data into the project directory
-function saveData(filename, content) {
+function saveData(filename, key, content) {
     if (!filename || !content) {
         console.error("Filename and content are required to save data.");
         return;
@@ -206,7 +206,7 @@ function saveData(filename, content) {
     }
 
     showLoading("Saving Data...");
-    window.electronAPI.saveDataToProject(fullPath, filename, content);
+    window.electronAPI.saveDataToProject(fullPath, filename, key, content);
 
     setTimeout(() => {
         hideLoading();

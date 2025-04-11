@@ -1,7 +1,7 @@
 // Function to save data into the project directory
-function saveData(filename, content) {
-    if (!filename || !content) {
-        console.error("Filename and content are required to save data.");
+function saveData(filename, key, content) {
+    if (!filename || !key || !content) {
+        console.error("Filename, key, and content are required to save data.");
         return;
     }
 
@@ -16,12 +16,20 @@ function saveData(filename, content) {
     }
 
     showLoading("Saving Data...");
-    window.electronAPI.saveDataToProject(fullPath, filename, content);
+    window.electronAPI.saveDataToProject(fullPath, filename, key, content);
 
-    setTimeout(() => {
+    // Listen for success or error responses
+    window.electronAPI.on('save-data-success', (message) => {
         hideLoading();
-        console.log("Data saved successfully!");
-    }, 500);
+        console.log(message);
+        alert("Data saved successfully!");
+    });
+
+    window.electronAPI.on('save-data-error', ({ message, details }) => {
+        hideLoading();
+        console.error(message, details);
+        alert(`Failed to save data: ${message}`);
+    });
 }
 
 // Function to clear local storage

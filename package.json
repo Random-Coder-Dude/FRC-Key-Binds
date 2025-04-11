@@ -33,7 +33,7 @@
     }
   },
   "dependencies": {
-
+    "edit-json-file": "^1.8.1"
   },
   "devDependencies": {
     "electron": "^35.1.4",

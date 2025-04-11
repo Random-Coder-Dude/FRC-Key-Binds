@@ -4,7 +4,7 @@ console.log("Preload script loaded successfully.");
 
 contextBridge.exposeInMainWorld('electronAPI', {
     setCurrentProject: (projectPath) => ipcRenderer.send('set-current-project', projectPath),
-    saveDataToProject: (fullPath, filename, content) => ipcRenderer.send('save-data-to-project', { fullPath, filename, content }),
+    saveDataToProject: (fullPath, filename, key, content) => ipcRenderer.send('save-data-to-project', { fullPath, filename, key, content }),
     showDirectoryPicker: async () => {
         const result = await ipcRenderer.invoke('show-directory-picker');
         return result.filePaths[0];
