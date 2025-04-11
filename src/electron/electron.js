@@ -38,7 +38,7 @@ ipcMain.on('set-current-project', (_event, projectPath) => {
     currentProject = projectPath;
 });
 
-ipcMain.on('save-data-to-project', async (event, { fullPath, filename, key, content }) => {
+ipcMain.on('save-data-to-project-keybinds', async (event, { fullPath, filename, key, content }) => {
     if (!fullPath || !filename || !key || !content) {
         console.error("Invalid parameters provided for saving data.");
         event.reply('save-data-error', {
@@ -49,8 +49,20 @@ ipcMain.on('save-data-to-project', async (event, { fullPath, filename, key, cont
     }
 
     const filePath = path.join(fullPath, 'src', 'main', 'deploy', 'Keybinder', filename);
+    const templatePath = path.join(__dirname, '..', '..', 'lib', 'json', 'keybind_template.json'); // Path to the template
 
     try {
+        // Check if the file exists
+        try {
+            await fs.access(filePath);
+            console.log(`File already exists: ${filePath}`);
+        } catch {
+            // File does not exist, create it and copy the template
+            await fs.mkdir(path.dirname(filePath), { recursive: true }); // Ensure the directory exists
+            await fs.copyFile(templatePath, filePath);
+            console.log(`Template copied to: ${filePath}`);
+        }
+
         // Load or create the JSON file
         const file = editJsonFile(filePath, { autosave: true });
 
@@ -74,6 +86,49 @@ ipcMain.on('save-data-to-project', async (event, { fullPath, filename, key, cont
 
         // Save the updated keybinds array back to the file
         file.set("keybinds", keybinds);
+
+        console.log(`Data saved successfully for key "${key}": ${filePath}`);
+        console.log(file.toObject());
+
+        event.reply('save-data-success', `Data saved successfully for key "${key}": ${filePath}`);
+    } catch (err) {
+        console.error(`Error saving data: ${err.message}`);
+        event.reply('save-data-error', {
+            message: "Failed to save data.",
+            error: err.message,
+        });
+    }
+});
+
+ipcMain.on('save-data-to-project-automations', async (event, { fullPath, filename, key, content }) => {
+    if (!fullPath || !filename || !key || !content) {
+        console.error("Invalid parameters provided for saving data.");
+        event.reply('save-data-error', {
+            message: "Invalid parameters provided.",
+            details: { fullPath, filename, key, content },
+        });
+        return;
+    }
+
+    const filePath = path.join(fullPath, 'src', 'main', 'deploy', 'Keybinder', filename);
+    const templatePath = path.join(__dirname, '..', '..', 'lib', 'json', 'automation_template.json'); // Path to the template
+
+    try {
+        // Check if the file exists
+        try {
+            await fs.access(filePath);
+            console.log(`File already exists: ${filePath}`);
+        } catch {
+            // File does not exist, create it and copy the template
+            await fs.mkdir(path.dirname(filePath), { recursive: true }); // Ensure the directory exists
+            await fs.copyFile(templatePath, filePath);
+            console.log(`Template copied to: ${filePath}`);
+        }
+
+        // Load or create the JSON file
+        const file = editJsonFile(filePath, { autosave: true });
+
+        file.append(key, content);
 
         console.log(`Data saved successfully for key "${key}": ${filePath}`);
         console.log(file.toObject());

@@ -36,7 +36,7 @@ function updateUI({ showHome = false, showMain = false }) {
             projectSelector.style.display = "none";
             addProjectButton.style.display = "none";
             topBar.style.display = "flex";
-            topBarTitle.textContent = "FRC Key Binder";
+            topBarTitle.textContent = "FRC Automation Manager";
             sidebar.style.display = "none";
             mainUI.style.display = "none";
         }
@@ -189,9 +189,9 @@ function updateTimeDate() {
 }
 
 // Function to save data into the project directory
-function saveData(filename, key, content) {
-    if (!filename || !content) {
-        console.error("Filename and content are required to save data.");
+function saveData(filename, key, content, KorA) {
+    if (!filename || !key || !content || !KorA) {
+        console.error("Filename, key, content, and KorA are required to save data.");
         return;
     }
 
@@ -206,12 +206,27 @@ function saveData(filename, key, content) {
     }
 
     showLoading("Saving Data...");
-    window.electronAPI.saveDataToProject(fullPath, filename, key, content);
+    try {
+        if (KorA === 1) {
+            window.electronAPI.saveDataToProjectK(fullPath, filename, key, content);
+        } else if (KorA === 2) {
+            window.electronAPI.saveDataToProjectA(fullPath, filename, key, content);
+        } else {
+            console.error("Invalid KorA value. Must be 1 or 2.");
+            alert("Invalid KorA value. Please specify 1 for keybinds or 2 for automations.");
+            hideLoading();
+            return;
+        }
 
-    setTimeout(() => {
-        hideLoading();
-        console.log("Data saved successfully!");
-    }, 500);
+        console.log("Data save request sent successfully!");
+    } catch (error) {
+        console.error("Error while saving data:", error);
+        alert("An error occurred while saving data. Check the console for details.");
+    } finally {
+        setTimeout(() => {
+            hideLoading();
+        }, 500);
+    }
 }
 
 // Function to clear local storage

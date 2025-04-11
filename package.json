@@ -1,7 +1,7 @@
 {
-  "name": "frc-key-binds",
+  "name": "frc-automation-manager",
   "version": "1.0.0",
-  "description": "FRC Key Binder Application",
+  "description": "FRC Automation Manager Application",
   "main": "src/electron/electron.js",
   "scripts": {
     "start": "clear && electron . && clear",
@@ -9,8 +9,8 @@
     "build": "clear && electron-builder"
   },
   "build": {
-    "appId": "com.example.frc-key-binds",
-    "productName": "FRC Key Binds",
+    "appId": "com.example.frc-automation-binder",
+    "productName": "FRC Automation Binder",
     "directories": {
       "output": "dist/${os}"
     },
@@ -33,11 +33,11 @@
     }
   },
   "dependencies": {
-    "edit-json-file": "^1.8.1"
   },
   "devDependencies": {
     "electron": "^35.1.4",
     "electron-builder": "^24.6.0",
-    "sass": "^1.86.3"
+    "sass": "^1.86.3",
+    "edit-json-file": "^1.8.1"
   }
 }
