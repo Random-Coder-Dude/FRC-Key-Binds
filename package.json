@@ -16,12 +16,12 @@
     },
     "files": [
       "src/**/*",
+      "lib/json/**/*",
       "package.json"
     ],
     "win": {
       "target": "nsis",
-      "signAndEditExecutable": false,
-      "icon": "src/assets/icons/icon.ico"
+      "signAndEditExecutable": false
     },
     "mac": {
       "target": "dmg",
@@ -33,11 +33,10 @@
     }
   },
   "dependencies": {
+    "edit-json-file": "^1.8.1"
   },
   "devDependencies": {
     "electron": "^35.1.4",
-    "electron-builder": "^24.6.0",
-    "sass": "^1.86.3",
-    "edit-json-file": "^1.8.1"
+    "electron-builder": "^24.6.0"
   }
 }
