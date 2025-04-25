@@ -1,7 +1,6 @@
 package frc.robot.AutomationManager;
 
 import java.io.File;
-import frc.robot.AutomationManager.parseJSON;
 
 public class Automation {
     private String m_name;
