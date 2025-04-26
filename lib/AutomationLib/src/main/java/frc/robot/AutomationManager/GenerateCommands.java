@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class GenerateCommands extends SequentialCommandGroup {
     private final Automation m_automation;
     List<Command> commands = new ArrayList<>();
+    public final Command[] m_CommandArray;
 
     public GenerateCommands(Automation automation) {
         this.m_automation = automation;
@@ -19,7 +20,7 @@ public class GenerateCommands extends SequentialCommandGroup {
         while (true) {
             String step = m_automation.getStep(stepNumber);
 
-            if (step == null || step.equals("END SYSTEM CHECKSUM: VALID")) {
+            if (step == null) {
                 break;
             }
 
@@ -33,7 +34,7 @@ public class GenerateCommands extends SequentialCommandGroup {
             stepNumber++;
         }
 
-        addCommands(commands.toArray(new Command[0]));
+        m_CommandArray = commands.toArray(new Command[0]);
     }
 
     private Command createCommandFromName(String commandName) {

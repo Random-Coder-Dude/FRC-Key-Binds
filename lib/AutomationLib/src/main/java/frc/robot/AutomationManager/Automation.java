@@ -2,6 +2,8 @@ package frc.robot.AutomationManager;
 
 import java.io.File;
 
+import edu.wpi.first.wpilibj2.command.Command;
+
 public class Automation {
     private String m_name;
     private File m_file;
@@ -31,5 +33,10 @@ public class Automation {
         else {
             return null;
         }
+    }
+
+    public Command[] GenerateCommands() {
+        GenerateCommands GenerateCommand = new GenerateCommands(this);
+        return GenerateCommand.m_CommandArray;
     }
 }

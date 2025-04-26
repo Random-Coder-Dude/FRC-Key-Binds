@@ -36,6 +36,6 @@ public class parseJSON {
         }
 
         // If the key is not found, return the checksum validation message
-        return "END SYSTEM CHECKSUM: VALID";
+        return null;
     }
 }
